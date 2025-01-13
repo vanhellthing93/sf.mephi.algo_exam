@@ -24,6 +24,7 @@ bin/
 
 ### VS Code ###
 .vscode/
+sf.mephi.algo_exam.code-workspace
 
 ### Mac OS ###
 .DS_Store
