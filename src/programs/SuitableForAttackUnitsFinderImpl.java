@@ -8,15 +8,39 @@ import java.util.List;
 
 public class SuitableForAttackUnitsFinderImpl implements SuitableForAttackUnitsFinder {
 
+    //алгоритмическая сложность O(n*m), мы один раз перебираем всех юнитов (m), во всех рядах (n)
     @Override
     public List<Unit> getSuitableUnits(List<List<Unit>> unitsByRow, boolean isLeftArmyTarget) {
+        //создаём список доступных юнитов
         List<Unit> suitableUnits = new ArrayList<>();
 
+        //перебираем все ряды
         for (List<Unit> row : unitsByRow) {
-            for (Unit unit : row) {
-                if (unit != null && unit.isAlive()) {
-                    if (isEdgeUnit(unit, row, isLeftArmyTarget)) {
-                        suitableUnits.add(unit);
+
+            // Проверяем юниты справа налево
+            if (isLeftArmyTarget) {
+                Unit unitFromRight = null; //переменная, в которой хранится юнит справа от текущего. Если она null, то он доступен для атаки
+                for (int i = row.size() - 1; i >= 0; i--) {
+                    Unit unit = row.get(i);
+                    if (unit != null && unit.isAlive()) {
+                        if (unitFromRight == null) {
+                            suitableUnits.add(unit);
+                        }
+                        unitFromRight = unit; // сохарняем текущий юнит в переменную, в которой хранится юнит справа
+                    }
+                }
+
+           // Проверяем юниты слева направо
+            } else {
+     
+                Unit unitFromLeft = null; //переменная, в которой хранится юнит слева от текущего. Если она null, то он доступен для атаки
+                for (int i = 0; i < row.size(); i++) {
+                    Unit unit = row.get(i);
+                    if (unit != null && unit.isAlive()) {
+                        if (unitFromLeft == null) {
+                            suitableUnits.add(unit);
+                        }
+                        unitFromLeft = unit; // сохарняем текущий юнит в переменную, в которой хранится юнит слева
                     }
                 }
             }
@@ -24,21 +48,4 @@ public class SuitableForAttackUnitsFinderImpl implements SuitableForAttackUnitsF
 
         return suitableUnits;
     }
-
-    private boolean isEdgeUnit(Unit unit, List<Unit> row, boolean isLeftArmyTarget) {
-        int unitIndex = row.indexOf(unit);
-        if (isLeftArmyTarget) {
-            for (int i = unitIndex + 1; i < row.size(); i++) {
-                if (row.get(i) != null) {
-                    return false;
-                }
-            }
-        } else {
-            for (int i = unitIndex - 1; i >= 0; i--) {
-                if (row.get(i) != null) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+}

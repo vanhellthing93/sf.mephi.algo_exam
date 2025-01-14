@@ -8,18 +8,20 @@ import java.util.*;
 
 public class GeneratePresetImpl implements GeneratePreset {
 
+    //Общая сложность O(n*log(n))
     @Override
     public Army generate(List<Unit> unitList, int maxPoints) {
-        Army enemyArmy = new Army();
-        List<Unit> listOfUnits = new ArrayList<>();
-        int totalPoints = 0;
+        
+        Army enemyArmy = new Army(); //Пустая армия
+        List<Unit> listOfUnits = new ArrayList<>(); //Пустой список юнитов
+        int totalPoints = 0; //Количество потраченных очков (начальное значение)
 
-        sortUnits(unitList);
+        sortUnits(unitList); //Сортировка юнитов по ценности O(n*log(n))
 
-        for (Unit unit : unitList) {
-            int maxUnitsForType = Math.min(11, maxPoints / unit.getCost());
-            for (int i = 0; i < maxUnitsForType && totalPoints + unit.getCost() <= maxPoints; i++) {
-                listOfUnits.add(createUnit(unit));
+        for (Unit unit : unitList) { // Цикл по списку юнитов O(n)
+            int maxUnitsForType = Math.min(11, maxPoints / unit.getCost()); 
+            for (int i = 0; i < maxUnitsForType && totalPoints + unit.getCost() <= maxPoints; i++) { //Цикл по максиальному количеству юнитов. В худшем случае O(11), т.е. O(1)
+                listOfUnits.add(createUnit(unit)); //добавление юнита в список
             }
         }
 
@@ -28,6 +30,7 @@ public class GeneratePresetImpl implements GeneratePreset {
         return enemyArmy;
     }
 
+    // Метод для создания юнита. Сложность O(1)
     private Unit createUnit (Unit unit) {
         Unit newUnit = new Unit(unit.getName(), unit.getUnitType(), unit.getHealth(),
                 unit.getBaseAttack(), unit.getCost(), unit.getAttackType(),
@@ -36,6 +39,7 @@ public class GeneratePresetImpl implements GeneratePreset {
         return newUnit;
     }
 
+    // Соритровка юнитов в зависимсоти от соотношения атаки к стоимостии и соотношения здоровья к стоимости. Сложность Collections.sort() составляет O(n*log(n))
     private void sortUnits(List<Unit> unsortedUnits) {
         unsortedUnits.sort(new Comparator<Unit>() {
             @Override
@@ -46,4 +50,5 @@ public class GeneratePresetImpl implements GeneratePreset {
             }
         });
 
+}
 }
