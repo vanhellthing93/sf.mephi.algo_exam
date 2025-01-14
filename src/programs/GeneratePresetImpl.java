@@ -37,8 +37,13 @@ public class GeneratePresetImpl implements GeneratePreset {
     }
 
     private void sortUnits(List<Unit> unsortedUnits) {
-        unsortedUnits.sort(Comparator.comparingDouble(
-                unit -> -((double) unit.getBaseAttack() / unit.getCost() + (double) unit.getHealth() / unit.getCost())));
-    }
+        unsortedUnits.sort(new Comparator<Unit>() {
+            @Override
+            public int compare(Unit unit1, Unit unit2) {
+                double value1 = -((double) unit1.getBaseAttack() / unit1.getCost() + (double) unit1.getHealth() / unit1.getCost());
+                double value2 = -((double) unit2.getBaseAttack() / unit2.getCost() + (double) unit2.getHealth() / unit2.getCost());
+                return Double.compare(value1, value2);
+            }
+        });
 
 }
