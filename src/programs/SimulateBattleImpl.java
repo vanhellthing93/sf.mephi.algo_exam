@@ -1,8 +1,14 @@
 package programs;
 
 import com.battle.heroes.army.Army;
+import com.battle.heroes.army.Unit;
 import com.battle.heroes.army.programs.PrintBattleLog;
 import com.battle.heroes.army.programs.SimulateBattle;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 public class SimulateBattleImpl implements SimulateBattle {
     private PrintBattleLog printBattleLog; // Позволяет логировать. Использовать после каждой атаки юнита

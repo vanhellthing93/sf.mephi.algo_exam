@@ -4,16 +4,16 @@ import com.battle.heroes.army.Unit;
 import com.battle.heroes.army.programs.Edge;
 import com.battle.heroes.army.programs.UnitTargetPathFinder;
 
-import java.util.List;
+import java.util.*;
 
 public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
-
+    private static final int WIDTH = 27;
+    private static final int HEIGHT = 21;
+    private static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     //Общая сложность O(HEIGHT*WIDTH), т.к.основные операции имеют сложность O(HEIGHT*WIDTH)
     @Override
     public List<Edge> getTargetPath(Unit attackUnit, Unit targetUnit, List<Unit> existingUnitList) {
-        private static final int WIDTH = 27;
-        private static final int HEIGHT = 21;
-        private static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
 
        // Инициализация массива расстояний O(HEIGHT*WIDTH)
         int[][] distances = initializeDistanceArray(attackUnit);
@@ -29,7 +29,7 @@ public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
 
         // Приоритетная очередь для хранения клеток
         PriorityQueue<Edge> queue = new PriorityQueue<>(Comparator.comparingInt(e -> distances[e.getY()][e.getX()]));
-        queue.add(new Edge(attackUnit.getX(), attackUnit.getY()));
+        queue.add(new Edge(attackUnit.getxCoordinate(), attackUnit.getyCoordinate()));
 
         // Основной цикл алгоритма Дейкстры. В худшем случае O(HEIGHT*WIDTH)
         while (!queue.isEmpty()) {
@@ -44,7 +44,7 @@ public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
             visited[y][x] = true;
 
             // Если достигли целевого юнита, завершаем поиск
-            if (x == targetUnit.getX() && y == targetUnit.getY()) {
+            if (x == targetUnit.getxCoordinate() && y == targetUnit.getyCoordinate()) {
                 break;
             }
 
@@ -62,7 +62,7 @@ public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
         for (int[] row : distances) {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
-        distances[attackUnit.getY()][attackUnit.getX()] = 0;
+        distances[attackUnit.getyCoordinate()][attackUnit.getxCoordinate()] = 0;
         return distances;
     }
 
@@ -71,7 +71,7 @@ public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
         Set<String> occupiedCells = new HashSet<>();
         for (Unit unit : existingUnitList) {
             if (unit.isAlive() && unit != attackUnit && unit != targetUnit) {
-                occupiedCells.add(unit.getX() + "," + unit.getY());
+                occupiedCells.add(unit.getxCoordinate() + "," + unit.getyCoordinate());
             }
         }
         return occupiedCells;
@@ -101,7 +101,7 @@ public class UnitTargetPathFinderImpl implements UnitTargetPathFinder {
     // Конструирование пути. В худшем случае сложность - O(HEIGHT*WIDTH)
     private List<Edge> constructPath(Edge[][] previous, Unit attackUnit, Unit targetUnit) {
         List<Edge> path = new ArrayList<>();
-        Edge current = new Edge(targetUnit.getX(), targetUnit.getY());
+        Edge current = new Edge(targetUnit.getxCoordinate(), targetUnit.getyCoordinate());
         while (current != null) {
             path.add(current);
             current = previous[current.getY()][current.getX()];
